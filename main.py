@@ -1,10 +1,10 @@
 import typer
+import time
 from subfinder_recon.main import SubDomainReconTool
 from httpx_tool.httpx_tool import ToolHTTPX
 from scan_api import acunetix
 from Priority.priority import AmassTool
 app = typer.Typer()
-
 
 @app.command()
 def hello(name: str):
@@ -50,9 +50,12 @@ def amassTool(listDomains, rootDomain):
 
 
 def acunetixTool(arr: list):
-    for domain in arr: 
-        id = acunetix.config(domain)
-        print(id)
+    scan_ids = acunetix.config_list(arr)
+    for i in scan_ids:
+        print(i)
+    print("Waiting for acunetix to return the result:")
+    acunetix.process(scan_ids)
+    print("Done")
 
 if __name__ == "__main__":
     app()
